@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 django = "*"
 django-debug-toolbar = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+pymongo = "==3.12.3"
+sqlparse = "==0.2.4"
 
 [dev-packages]
 

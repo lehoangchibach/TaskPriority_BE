@@ -35,12 +35,18 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
+    'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'playground',
     'debug_toolbar',
+    'rest_framework',
+    'corsheaders',
+    'TaskPriority_BE',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,8 +83,12 @@ WSGI_APPLICATION = 'task_priority.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'CLIENT': {
+            "host": "mongodb+srv://admin:r4bluv4nhr4b@bachcluster.hn3an.mongodb.net/?retryWrites=true&w=majority",
+            "name": "TaskPriority",
+            "authMechanism": "SCRAM-SHA-1"  # for atlas cloud DB
+        },
     }
 }
 
