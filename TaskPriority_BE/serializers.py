@@ -11,8 +11,11 @@ class UsersSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('owner', 'title', 'summary', 'detail',
+        fields = ('owner', 'taskId', 'title', 'summary', 'detail',
                   'deadlineTime', 'deadlineDate', 'priority')
+        # fields = ('taskId', 'title', 'summary', 'detail',
+        #           'deadlineTime', 'deadlineDate', 'priority')
+        # fields = ('taskId', 'title', 'summary', 'priority')
 
 
 class TasksSerializer(serializers.ModelSerializer):

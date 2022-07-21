@@ -11,28 +11,31 @@ class Users(models.Model):
 
 class Task(models.Model):
     PRIORITY_CHOICES = (
-        ('Low', 'low'),
-        ('Normal', 'normal'),
-        ('High', 'high'),
-        ('Doing', 'doing'),
-        ('Done', 'done'),
+        ('low', 'Low Priority'),
+        ('normal', 'Normal Priority'),
+        ('high', 'High Priority'),
+        ('doing', 'Doing'),
+        ('done', 'Done'),
     )
-    owner = models.OneToOneField(
+    owner = models.ForeignKey(
         Users,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=True, null=True
     )
+    taskId = models.CharField(primary_key=True, max_length=40, unique=True)
     title = models.CharField(max_length=30)
     summary = models.CharField(max_length=250)
-    detail = models.TextField(max_length=500, blank=True)
-    deadlineTime = models.TimeField()
-    deadlineDate = models.DateField()
+    detail = models.TextField(max_length=500, blank=True, null=True)
+    deadlineTime = models.TimeField(blank=True, null=True)
+    deadlineDate = models.DateField(blank=True, null=True)
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES)
 
 
 class Tasks(models.Model):
     owner = models.OneToOneField(
         Users,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=True
     )
     low = models.ForeignKey(
         Task,
