@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from TaskPriority_BE.models import Users, Task, Tasks
+from TaskPriority_BE.models import Users, Task
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -16,10 +16,3 @@ class TaskSerializer(serializers.ModelSerializer):
         # fields = ('taskId', 'title', 'summary', 'detail',
         #           'deadlineTime', 'deadlineDate', 'priority')
         # fields = ('taskId', 'title', 'summary', 'priority')
-
-
-class TasksSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tasks
-        fields = ('owner', 'low', 'normal', 'high',
-                  'doing', 'done')

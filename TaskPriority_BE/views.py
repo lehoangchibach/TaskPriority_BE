@@ -5,9 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from uuid import uuid4
+import datetime
 
-from TaskPriority_BE.models import Users, Task, Tasks
-from TaskPriority_BE.serializers import UsersSerializer, TaskSerializer, TasksSerializer
+from TaskPriority_BE.models import Users, Task
+from TaskPriority_BE.serializers import UsersSerializer, TaskSerializer
 
 
 # Create your views here.
@@ -56,6 +57,17 @@ def taskAPI(request, taskId=' '):
     if request.method == 'POST':
         task = JSONParser().parse(request)
         task['taskId'] = uuid4().hex
+
+        if (task['deadlineTime']):
+            date_time_obj = datetime.datetime.strptime(
+                task['deadlineTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            task['deadlineTime'] = date_time_obj.timetz()
+
+        if (task['deadlineDate']):
+            date_time_obj = datetime.datetime.strptime(
+                task['deadlineDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            task['deadlineDate'] = date_time_obj.date()
+
         task_serializer = TaskSerializer(data=task)
         if task_serializer.is_valid():
             task_serializer.save()
@@ -65,6 +77,17 @@ def taskAPI(request, taskId=' '):
     if request.method == 'PUT':
         taskChange = JSONParser().parse(request)
         taskCurrent = Task.objects.get(taskId=taskChange['taskId'])
+
+        if (taskChange['deadlineTime']):
+            date_time_obj = datetime.datetime.strptime(
+                taskChange['deadlineTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            taskChange['deadlineTime'] = date_time_obj.timetz()
+
+        if (taskChange['deadlineDate']):
+            date_time_obj = datetime.datetime.strptime(
+                taskChange['deadlineDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            taskChange['deadlineDate'] = date_time_obj.date()
+
         task_serializer = TaskSerializer(taskCurrent, data=taskChange)
         if task_serializer.is_valid():
             task_serializer.save()
