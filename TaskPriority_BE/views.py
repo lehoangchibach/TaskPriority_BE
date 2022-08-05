@@ -1,6 +1,3 @@
-import imp
-import re
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
@@ -21,14 +18,6 @@ def usersAPI(request, userName=' '):
         users_serializer = UsersSerializer(users, many=True)
         return JsonResponse(users_serializer.data, safe=False)
 
-    if request.method == 'POST':
-        user_data = JSONParser().parse(request)
-        users_serializer = UsersSerializer(data=user_data)
-        if users_serializer.is_valid():
-            users_serializer.save()
-            return JsonResponse("Added Successfully", safe=False)
-        return JsonResponse("Failed to Add", safe=False)
-
     if request.method == 'PUT':
         user_data = JSONParser().parse(request)
         user = Users.objects.get(userName=user_data['userName'])
@@ -45,10 +34,105 @@ def usersAPI(request, userName=' '):
 
 
 @csrf_exempt
+def createUser(request):
+    if (request.method == 'POST'):
+        user_data = JSONParser().parse(request)
+
+        user = None
+        users = UsersSerializer(Users.objects.all(), many=True).data
+        for each in users:
+            if each['userName'] == user_data['userName']:
+                user = each
+                break
+
+        if (user):
+            return JsonResponse("Username has already existed!", safe=False)
+
+        user_serializer = UsersSerializer(data=user_data)
+        if (user_serializer.is_valid()):
+            user_serializer.save()
+            return JsonResponse("User is created successfully!", safe=False)
+        return JsonResponse("Failed to create new user!", safe=False)
+
+
+@csrf_exempt
+def logIn(request):
+    if (request.method == 'GET'):
+        user_data = JSONParser().parse(request)
+
+        user = None
+        users = UsersSerializer(Users.objects.all(), many=True).data
+        for each in users:
+            if each['userName'] == user_data['userName']:
+                user = each
+                break
+
+        if (not user):
+            return JsonResponse("User not found!", safe=False)
+        if (user_data['password'] != user['password']):
+            return JsonResponse("Password is not correct!", safe=False)
+
+        return JsonResponse({"userName": user['userName']}, safe=False)
+
+
+@csrf_exempt
+def changePassword(request):
+    if (request.method == 'PUT'):
+        user_data = JSONParser().parse(request)
+
+        user = None
+        users = UsersSerializer(Users.objects.all(), many=True).data
+        for each in users:
+            if each['userName'] == user_data['userName']:
+                user = each
+                oldUser = Users.objects.get(userName=user_data['userName'])
+                break
+
+        if (not user):
+            return JsonResponse("User not found!", safe=False)
+
+        if (user_data['oldPassword'] != user['password']):
+            return JsonResponse("Old password is not correct!", safe=False)
+
+        user['password'] = user_data['newPassword']
+        user_serializer = UsersSerializer(oldUser, data=user)
+
+        if (user_serializer.is_valid()):
+            user_serializer.save()
+            return JsonResponse("User updated successfully!", safe=False)
+        return JsonResponse("Failed to update user!", safe=False)
+
+
+@csrf_exempt
+def updateDisplayName(request):
+    if (request.method == 'PUT'):
+
+        user_data = JSONParser().parse(request)
+
+        user = None
+        users = UsersSerializer(Users.objects.all(), many=True).data
+        for each in users:
+            if each['userName'] == user_data['userName']:
+                user = each
+                oldUser = Users.objects.get(userName=user_data['userName'])
+                break
+
+        if (not user):
+            return JsonResponse("User not found!", safe=False)
+
+        user['displayName'] = user_data['displayName']
+        user_serializer = UsersSerializer(oldUser, data=user)
+
+        if (user_serializer.is_valid()):
+            user_serializer.save()
+            return JsonResponse("User updated successfully!", safe=False)
+        return JsonResponse("Failed to update user!", safe=False)
+
+
+@csrf_exempt
 def taskAPI(request, taskId=' '):
     if request.method == 'GET':
         task = Task.objects.get(taskId=taskId)
-        # task = Task.objects.all()
         task_serializer = TaskSerializer(task).data
         if not task_serializer:
             return JsonResponse('Can not find task', safe=False)
