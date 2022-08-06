@@ -25,13 +25,13 @@ SECRET_KEY = 'django-insecure-xm!8ed$cux+vxrl954k4$!k-%8_juu099hyr83$v$vaxchtmal
 IS_HEROKU = "DYNO" in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['eb-django-app-dev.elasticbeanstalk.com']
-if IS_HEROKU:
-    ALLOWED_HOSTS = ["*"]
-else:
-    ALLOWED_HOSTS = []
+# if IS_HEROKU:
+#     ALLOWED_HOSTS = ["*"]
+# else:
+ALLOWED_HOSTS = ['taskpriority-be.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
@@ -48,11 +48,16 @@ INSTALLED_APPS = [
     'TaskPriority_BE',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'https://lehoangchibach.github.io/TaskPriority_FE/',
+    'http://localhost:3000/',
+)
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,7 +138,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

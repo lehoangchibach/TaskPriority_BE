@@ -57,7 +57,7 @@ def createUser(request):
 
 @csrf_exempt
 def logIn(request):
-    if (request.method == 'GET'):
+    if (request.method == 'POST'):
         user_data = JSONParser().parse(request)
 
         user = None
@@ -72,7 +72,9 @@ def logIn(request):
         if (user_data['password'] != user['password']):
             return JsonResponse("Password is not correct!", safe=False)
 
-        return JsonResponse({"userName": user['userName']}, safe=False)
+        return JsonResponse({"userName": user['userName'],
+                             "displayName": user['displayName']
+                             }, safe=False)
 
 
 @csrf_exempt
