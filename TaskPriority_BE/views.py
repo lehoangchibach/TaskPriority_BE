@@ -51,8 +51,20 @@ def createUser(request):
         user_serializer = UsersSerializer(data=user_data)
         if (user_serializer.is_valid()):
             user_serializer.save()
-            return JsonResponse("User is created successfully!", safe=False)
+            return JsonResponse({"userName": user_data['userName'],
+                                 "displayName": user_data['displayName']
+                                 }, safe=False)
         return JsonResponse("Failed to create new user!", safe=False)
+
+
+@csrf_exempt
+def deleteUser(request):
+    if (request.method == 'DELETE'):
+        user_data = JSONParser().parse(request)
+        user = Users.objects.get(userName=user_data['userName'])
+
+        user.delete()
+        return JsonResponse("Deleted Successfully", safe=False)
 
 
 @csrf_exempt

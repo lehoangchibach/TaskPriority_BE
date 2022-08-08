@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xm!8ed$cux+vxrl954k4$!k-%8_juu099hyr83$v$vaxchtmal
 IS_HEROKU = "DYNO" in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # ALLOWED_HOSTS = ['eb-django-app-dev.elasticbeanstalk.com']
 # if IS_HEROKU:
@@ -48,11 +48,13 @@ INSTALLED_APPS = [
     'TaskPriority_BE',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'https://lehoangchibach.github.io/TaskPriority_FE/',
-    'http://localhost:3000/',
-)
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ORIGIN_WHITELIST = (
+#     'https://lehoangchibach.github.io/TaskPriority_FE/',
+#     'http://localhost:3000/',
+# )
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
